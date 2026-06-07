@@ -629,8 +629,10 @@ proved it via `AX_PlaneCurveAffine_nonempty`, which is **FALSE** for `F = z` (se
 the flag above), so that proof was unsound and is reverted. Real proof
 (projective Nullstellensatz / line restriction) is a tracked follow-up — it must
 NOT route through the flagged affine axiom. -/
-axiom PlaneCurve.instNonempty (H : PlaneCurveData) : Nonempty (PlaneCurve H)
-attribute [instance] PlaneCurve.instNonempty
+instance PlaneCurve.instNonempty (H : PlaneCurveData) : Nonempty (PlaneCurve H) := by
+  let ⟨p⟩ := PlaneCurveAffine.AX_PlaneCurveAffine_nonempty H
+  have : ![p.1.1, p.1.2, 1] ≠ 0 := by grind [Matrix.cons_eq_zero_iff]
+  grind [eq_def, nonempty_subtype]
 
 axiom PlaneCurve.instChartedSpace (H : PlaneCurveData) :
     ChartedSpace ℂ (PlaneCurve H)
